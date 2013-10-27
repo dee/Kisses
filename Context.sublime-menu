@@ -1,0 +1,11 @@
+[  
+{  
+	"id": "kisses_menu",  
+	"caption": "Kisses",
+	"children":  
+	[  
+		{"caption": "Example", "command": "example" },
+		{"caption": "Type Info", "command": "gettype" }  
+	]  
+}  
+]  
