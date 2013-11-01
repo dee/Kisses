@@ -4,8 +4,10 @@
 	"caption": "Kisses",
 	"children":  
 	[  
-		{"caption": "Example", "command": "example" },
-		{"caption": "Type Info", "command": "gettype" }  
+		{"caption": "Search Hoogle", "command": "hooglesearch" },
+		{"caption": "-"},
+		{"caption": "Type info", "command": "gettype" },
+		{"caption": "Type info history", "command": "gettypehistory" } 
 	]  
 }  
 ]  
