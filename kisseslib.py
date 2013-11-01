@@ -208,6 +208,11 @@ class SearchResultParser(html.parser.HTMLParser):
     # result
     responses = []
 
+    def __init__(self, strict = False):
+        super().__init__(strict)
+        self.responses = []
+        #print("Initialised parser instance, result="+repr(self.responses))
+
     def setFlags(self, tag, attrs, isStart=True):
         """ toggles internal flags depending on tag type """
         try:
@@ -231,7 +236,6 @@ class SearchResultParser(html.parser.HTMLParser):
         self.setFlags(tag, attrs)
 
     def handle_data(self, data):
-        # todo: decode html
         if self.resultStart:
             self.result += self.unescape(data)
         if self.docStringStart:
