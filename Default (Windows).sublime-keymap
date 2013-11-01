@@ -1,6 +1,14 @@
 [
 	{
-		"keys": ["ctrl+alt+i"],
+		"keys": ["ctrl+h", "ctrl+t"],
 		"command": "gettype"
-	}
+	},
+	{
+		"keys": ["ctrl+h", "ctrl+i"],
+		"command": "gettypehistory"
+	},
+	{
+		"keys": ["ctrl+h", "ctrl+h"],
+		"command": "hooglesearch"
+	},
 ]
