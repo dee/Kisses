@@ -46,3 +46,19 @@ class GettypeCommand(sublime_plugin.TextCommand):
 					sublime.status_message('GetType: no info on '+symbol)
 					pass
 
+
+class GettypehistoryCommand(sublime_plugin.TextCommand):
+	""" Shows a box with previously requested type info """
+
+	def run(self, edit):
+		print("Showing a type search history.")
+		print(getTypeHistory)
+		sublime.active_window().show_quick_panel(getTypeHistory, on_select=None)
+
+
+class HooglesearchCommand(sublime_plugin.TextCommand):
+	""" asks hoogle about text at cursor, shows results in separate window """
+
+	def run(self, edit):
+		print("Searching in Hoogle")
+		pass
