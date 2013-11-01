@@ -84,14 +84,15 @@ class Hugs:
         else:
             proc = subprocess.Popen([self.hugs, "-i +T -98", sourceFile], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         (so, se) = proc.communicate(input=commandLine.encode("utf-8"))
-        return str(so)
+        return so.decode('utf-8')
+        #return str(so)
 
     def processResponse(self, output, parser):
         """
         Parses results of runHugs(...)
         """
         results = []
-        lines = output.split('\\r\\n')
+        lines = output.split('\r\n')
         for line in lines:
             # strip prompt
             buf = line
@@ -172,3 +173,91 @@ class TypeParser(BaseParser):
         if buf.startswith(self.expression):
             return HugsMessage(buf)
         return None
+
+
+class Hoogle:
+    """ Runs a http query against hoogle and parses results """
+
+    baseUrl = 'http://www.haskell.org/hoogle/?hoogle='
+
+    def prepare(self, response):
+        buf = response
+
+    def getSuggestions(self, searchText):
+        try:
+            req = urllib.request.Request(self.baseUrl + searchText)
+            response = urllib.request.urlopen(req)
+            the_page = response.read()
+            p = SearchResultParser()
+            p.feed(the_page.decode('iso-8859-1'))
+            for r in p.responses:
+                print(r)
+        except html.parser.HTMLParseError as e:
+            return str(e)
+
+
+class SearchResultParser(html.parser.HTMLParser):
+    """ Parses primary response from Hoogle """
+
+    resultStart = False
+    sourceStart = False
+    docStringStart = False
+
+    # buffers
+    result = ''
+    source = ''
+    docString = ''
+
+    # result
+    responses = []
+
+    def setFlags(self, tag, attrs, isStart=True):
+        """ toggles internal flags depending on tag type """
+        try:
+            classAttr = ''
+            for (name, value) in attrs:
+                if name == 'class':
+                    classAttr = value.strip().split(" ")
+            if 'ans' in classAttr:
+                print("Start of entry tag: {0} {1}".format(tag, attrs))
+                self.resultStart = True
+            if 'from' in classAttr:
+                print("Start of source tag: {0} {1}".format(tag, attrs))
+                self.sourceStart = True
+            if 'doc' in classAttr:
+                print("Start of docstring tag: {0} {1}".format(tag, attrs))
+                self.docStringStart = True
+        except Exception as e:
+            print(e)
+            return
+
+    def handle_starttag(self, tag, attrs):
+        if tag != 'div':
+            return
+        self.setFlags(tag, attrs)
+
+    def handle_data(self, data):
+        if self.resultStart:
+            self.result += data
+        if self.docStringStart:
+            self.docString += data
+        if self.sourceStart:
+            self.source += data
+
+    def handle_endtag(self, tag):
+        if tag != 'div':
+            return
+        if self.resultStart:
+            print("End entry tag : "+tag)
+            self.resultStart = False
+        if self.sourceStart:
+            print("End source tag : "+tag)
+            self.sourceStart = False
+        if self.docStringStart:
+            print("End docstring tag : "+tag)
+            self.responses.append([self.result, self.source, self.docString])
+            self.result = ''
+            self.source = ''
+            self.docString = ''
+            self.docStringStart = False
+
