@@ -3,6 +3,7 @@ import platform
 import os
 import subprocess
 import re
+import html.parser
 
 
 class Hugs:
@@ -85,7 +86,6 @@ class Hugs:
             proc = subprocess.Popen([self.hugs, "-i +T -98", sourceFile], stdout=subprocess.PIPE, stdin=subprocess.PIPE)
         (so, se) = proc.communicate(input=commandLine.encode("utf-8"))
         return so.decode('utf-8')
-        #return str(so)
 
     def processResponse(self, output, parser):
         """
