@@ -78,6 +78,7 @@ class HooglesearchCommand(sublime_plugin.TextCommand):
 
 	def run(self, edit):
 		symbol = getSymbol(self.view)
+		print("Checking symbol " + symbol)
 		if not symbol:
 			sublime.status_message('Hoogle: empty selection or no symbol under cursor.')
 			return
@@ -93,12 +94,15 @@ class HooglesearchCommand(sublime_plugin.TextCommand):
 				docstring += "..."
 				result[2] = docstring
 			self.currentResults.append(result)
-
 		# todo: on select open new window with results
 		sublime.active_window().show_quick_panel(self.currentResults, 
 			on_select=self.selectEntry, 
 			flags=sublime.MONOSPACE_FONT)
 
 	def selectEntry(self, index):
-		selection = self.currentResults[index]
-		# todo: continue
+		try:
+			selection = self.currentResults[index]
+			# todo: continue
+		except Exception as e:
+			pass
+
