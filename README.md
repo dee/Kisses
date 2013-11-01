@@ -15,7 +15,9 @@ It also includes popup menu extension.
 Installation
 ------------
 
-Simply copy this directory contents to <sublime_package_directory>/Data/Packages/Kisses.
+Simply copy this directory contents to :
+* <sublime_package_directory>/Data/Packages/Kisses on Windows;
+* ~/.config/sublime-text-3/Packages on Linux.
 
 Configuration
 -------------
